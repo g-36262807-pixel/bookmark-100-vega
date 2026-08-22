@@ -161,16 +161,6 @@
                     </button>
                 </div>
             </div>
-            
-
-    // Kemaskini paparan antara muka
-    document.getElementById('admin-mode-text').innerText = isAdmin ? "Mod Admin" : "Mod Murid";
-    document.querySelectorAll('.admin-only').forEach(el => el.classList.toggle('hidden', !isAdmin));
-    
-    // Segarkan paparan kad murid jika perlu
-    if (typeof renderStudentCards === 'function') {
-        renderStudentCards();
-    }
 }
 
             <!-- Mobile Navigation Bar -->
