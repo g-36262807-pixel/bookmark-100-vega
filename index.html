@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Papan Pemuka Bio-Dojo Bookmark 100</title>
+    <title>Papan Pemuka Bio-Dojo Bookmark 100 (Real-Time)</title>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,13 +18,7 @@
                             dark: '#0f172a',
                             card: '#1e293b',
                             accent: '#10b981',
-                            red: '#ef4444',
-                            beltStarter: '#e2e8f0',
-                            beltExplorer: '#22c55e',
-                            beltAchiever: '#3b82f6',
-                            beltMaster: '#8b5cf6',
-                            beltElite: '#334155',
-                            beltLegend: '#eab308',
+                            red: '#ef4444'
                         }
                     },
                     fontFamily: {
@@ -44,6 +38,10 @@
 
     <!-- Canvas Confetti CDN -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <!-- Firebase JS SDK (v9 Compat for easy browser integration) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <style>
         .podium-1 {
@@ -114,7 +112,7 @@
                         <div class="flex items-center space-x-2 mt-0.5">
                             <span id="cloud-sync-status" class="inline-flex items-center space-x-1 text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-medium">
                                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping mr-1"></span>
-                                <span>Disinkronkan Masa Nyata</span>
+                                <span id="sync-status-text">Memuatkan Cloud Data...</span>
                             </span>
                             <p class="text-xs text-slate-400 hidden md:inline">• Tetapan Kehadiran Harian, Bab & Pencapaian</p>
                         </div>
@@ -404,9 +402,7 @@
                 </div>
 
                 <!-- Session Meta Info Badge -->
-                <div id="session-info-badge" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs">
-                    <!-- Dynamic details about chosen session -->
-                </div>
+                <div id="session-info-badge" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs"></div>
             </div>
 
             <!-- Kod Pengisian Legend -->
@@ -447,9 +443,7 @@
                                 <th class="p-3 text-center">Tahap Belt</th>
                             </tr>
                         </thead>
-                        <tbody id="attendance-matrix-body" class="divide-y divide-slate-800">
-                            <!-- Populated dynamically -->
-                        </tbody>
+                        <tbody id="attendance-matrix-body" class="divide-y divide-slate-800"></tbody>
                     </table>
                 </div>
             </div>
@@ -501,9 +495,7 @@
                     </div>
                 </div>
 
-                <div id="daily-planner-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    <!-- Dynamically populated daily chapter cards -->
-                </div>
+                <div id="daily-planner-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
             </div>
 
             <!-- Tabular List View & Custom Edit Form -->
@@ -539,7 +531,6 @@
                         <div>
                             <label class="block text-slate-400 font-semibold mb-1">Bab Biologi Diuji</label>
                             <select id="session-bab-input" required class="w-full bg-slate-950 border border-slate-700 text-emerald-300 font-medium rounded-xl px-3 py-2 focus:outline-none focus:border-emerald-500">
-                                <!-- Populated dynamically -->
                             </select>
                         </div>
 
@@ -601,9 +592,7 @@
                                     <th class="p-3 text-right">Tindakan</th>
                                 </tr>
                             </thead>
-                            <tbody id="session-list-body" class="divide-y divide-slate-800">
-                                <!-- Populated dynamically -->
-                            </tbody>
+                            <tbody id="session-list-body" class="divide-y divide-slate-800"></tbody>
                         </table>
                     </div>
                 </div>
@@ -612,8 +601,6 @@
 
         <!-- ================= TAB 4: GRAF PENCAPAIAN ================= -->
         <section id="view-analytics" class="tab-content space-y-6 hidden">
-            
-            <!-- Coverage Summary Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex items-center justify-between">
                     <div>
@@ -637,7 +624,6 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Chart 1: Student Minutes Achievement -->
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-3">
                     <h3 class="text-sm font-bold text-white flex items-center space-x-2">
                         <i class="fa-solid fa-chart-bar text-emerald-400"></i>
@@ -648,7 +634,6 @@
                     </div>
                 </div>
 
-                <!-- Chart 2: Belt Rank Distribution -->
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-3">
                     <h3 class="text-sm font-bold text-white flex items-center space-x-2">
                         <i class="fa-solid fa-chart-pie text-amber-400"></i>
@@ -660,7 +645,6 @@
                 </div>
             </div>
 
-            <!-- Chart 3: Daily Attendance Trend -->
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-3">
                 <h3 class="text-sm font-bold text-white flex items-center space-x-2">
                     <i class="fa-solid fa-chart-line text-blue-400"></i>
@@ -692,10 +676,7 @@
                     </div>
                 </div>
 
-                <!-- Cards Grid of Students -->
-                <div id="student-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    <!-- Dynamic student cards -->
-                </div>
+                <div id="student-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
             </div>
         </section>
 
@@ -716,7 +697,6 @@
                 <p id="passport-modal-belt" class="mt-1"></p>
             </div>
 
-            <!-- Manual Cop Adjustment Controls -->
             <div class="admin-only bg-slate-950/80 p-3 rounded-2xl border border-slate-800 flex items-center justify-between">
                 <span class="text-xs text-slate-400 font-semibold">Pelarasan Cop Manual:</span>
                 <div class="flex items-center space-x-2">
@@ -752,12 +732,10 @@
             </div>
 
             <div class="flex justify-between items-center pt-2 border-t border-slate-800">
-                <div class="flex space-x-2">
-                    <button id="btn-passport-print" onclick="window.print()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-3 py-2 rounded-xl text-xs transition flex items-center space-x-1">
-                        <i class="fa-solid fa-print"></i>
-                        <span>Cetak Kad</span>
-                    </button>
-                </div>
+                <button id="btn-passport-print" onclick="window.print()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-3 py-2 rounded-xl text-xs transition flex items-center space-x-1">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Cetak Kad</span>
+                </button>
                 <button onclick="closeModal('modal-passport')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-5 py-2 rounded-xl text-xs transition">
                     Tutup
                 </button>
@@ -765,7 +743,7 @@
         </div>
     </div>
 
-    <!-- Modal: Quick Change Chapter for Selected Day -->
+    <!-- Modal: Quick Change Chapter -->
     <div id="modal-quick-chapter" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-slate-900 border border-amber-500/40 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 relative">
             <button onclick="closeModal('modal-quick-chapter')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
@@ -797,9 +775,7 @@
 
                 <div>
                     <label class="block text-slate-400 font-semibold mb-1">Bab Biologi Diuji</label>
-                    <select id="quick-session-bab" required class="w-full bg-slate-950 border border-slate-700 text-emerald-300 font-medium rounded-xl px-3 py-2 focus:outline-none focus:border-emerald-500">
-                        <!-- Populated dynamically -->
-                    </select>
+                    <select id="quick-session-bab" required class="w-full bg-slate-950 border border-slate-700 text-emerald-300 font-medium rounded-xl px-3 py-2 focus:outline-none focus:border-emerald-500"></select>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
@@ -890,9 +866,28 @@
         </div>
     </div>
 
-    <!-- Main Application Logic Script -->
+    <!-- Main Application Logic & Realtime Sync Script -->
     <script>
-        // Global Application State Variables
+        // ================= FIREBASE REALTIME DB CONFIGURATION =================
+        // Gantikan konfigurasi ini dengan Firebase Project anda sendiri untuk pangkalan data sendiri!
+        const firebaseConfig = {
+  databaseURL: "https://bookmark-100-default-rtdb.asia-southeast1.firebasedatabase.app"
+};
+
+        let db = null;
+        let isFirebaseActive = false;
+
+        try {
+            if (typeof firebase !== 'undefined' && firebaseConfig.databaseURL) {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.database();
+                isFirebaseActive = true;
+            }
+        } catch(e) {
+            console.warn("Firebase tidak diaktifkan, guna LocalStorage fallback:", e);
+        }
+
+        // State Global
         let isAdmin = true;
 
         const DEFAULT_STUDENTS = [
@@ -951,18 +946,11 @@
         };
 
         const ACTIVITIES_LIST = [
-            "Recall Challenge",
-            "Beat The Clock",
-            "Hot Seat",
-            "Explain Like A Teacher",
-            "Peer Challenge",
-            "Mystery Flashcard",
-            "Rapid Fire",
-            "Bio Relay",
-            "Bio-Dojo Master Challenge"
+            "Recall Challenge", "Beat The Clock", "Hot Seat",
+            "Explain Like A Teacher", "Peer Challenge", "Mystery Flashcard",
+            "Rapid Fire", "Bio Relay", "Bio-Dojo Master Challenge"
         ];
 
-        // Format Date YYYY-MM-DD
         function getFormattedDate(offsetDays = 0) {
             const d = new Date();
             d.setDate(d.getDate() + offsetDays);
@@ -997,28 +985,68 @@
         let beltChart = null;
         let trendChart = null;
 
-        function initApp() {
-            loadStoredData();
-            refreshAllUI();
+        // Init Application
+        window.addEventListener('DOMContentLoaded', () => {
+            initRealtimeSync();
+        });
+
+        function initRealtimeSync() {
+            const statusEl = document.getElementById('sync-status-text');
+
+            if (isFirebaseActive && db) {
+                statusEl.innerText = "Disinkronkan Masa Nyata (Cloud)";
+                
+                // Mendengar perubahan pada Realtime Database (Auto push ke peranti murid!)
+                db.ref('biodojo_data').on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        students = data.students || DEFAULT_STUDENTS.map((name, index) => ({ id: 'std_' + (index + 1), name }));
+                        sessions = data.sessions || [...DEFAULT_SESSIONS];
+                        attendanceRecords = data.attendanceRecords || {};
+                        manualCops = data.manualCops || {};
+                    } else {
+                        // Pertama kali jalankan, hantar data awal ke Firebase
+                        students = DEFAULT_STUDENTS.map((name, index) => ({ id: 'std_' + (index + 1), name }));
+                        sessions = [...DEFAULT_SESSIONS];
+                        attendanceRecords = {};
+                        manualCops = {};
+                        saveDataToCloud();
+                    }
+                    refreshAllUI();
+                });
+            } else {
+                statusEl.innerText = "Mod Luar Talian (LocalStorage)";
+                loadLocalData();
+                refreshAllUI();
+            }
         }
 
-        function saveData() {
+        function saveDataToCloud() {
+            const payload = {
+                students: students,
+                sessions: sessions,
+                attendanceRecords: attendanceRecords,
+                manualCops: manualCops,
+                lastUpdated: Date.now()
+            };
+
+            // Simpan ke LocalStorage sebagai backup
             localStorage.setItem('biodojo_students', JSON.stringify(students));
             localStorage.setItem('biodojo_sessions', JSON.stringify(sessions));
             localStorage.setItem('biodojo_attendance', JSON.stringify(attendanceRecords));
             localStorage.setItem('biodojo_manualCops', JSON.stringify(manualCops));
+
+            // Jika Firebase aktif, muat naik ke Cloud secara nyata!
+            if (isFirebaseActive && db) {
+                db.ref('biodojo_data').set(payload).catch(err => {
+                    console.error("Gagal menyimpan ke Cloud:", err);
+                });
+            }
         }
 
-        function loadStoredData() {
+        function loadLocalData() {
             const savedStudents = localStorage.getItem('biodojo_students');
-            if (savedStudents) {
-                students = JSON.parse(savedStudents);
-            } else {
-                students = DEFAULT_STUDENTS.map((name, index) => ({
-                    id: 'std_' + (index + 1),
-                    name: name
-                }));
-            }
+            students = savedStudents ? JSON.parse(savedStudents) : DEFAULT_STUDENTS.map((name, index) => ({ id: 'std_' + (index + 1), name }));
 
             const savedSessions = localStorage.getItem('biodojo_sessions');
             sessions = savedSessions ? JSON.parse(savedSessions) : [...DEFAULT_SESSIONS];
@@ -1037,12 +1065,8 @@
             populateAttendanceSessionDropdown();
             loadAttendanceMatrix();
             updateDashboard();
-            if (!document.getElementById('view-analytics').classList.contains('hidden')) {
-                updateCharts();
-            }
-            if (!document.getElementById('view-students').classList.contains('hidden')) {
-                renderStudentCards();
-            }
+            if (!document.getElementById('view-analytics').classList.contains('hidden')) updateCharts();
+            if (!document.getElementById('view-students').classList.contains('hidden')) renderStudentCards();
         }
 
         function showToast(msg, type = 'success') {
@@ -1086,11 +1110,11 @@
             if (isAdmin) {
                 if (btnText) btnText.innerText = "Mod Admin";
                 adminEls.forEach(el => el.classList.remove('hidden'));
-                showToast("Mod Admin diaktifkan - Anda boleh menyunting data kehadiran", "info");
+                showToast("Mod Admin diaktifkan", "info");
             } else {
                 if (btnText) btnText.innerText = "Mod Murid (Paparan)";
                 adminEls.forEach(el => el.classList.add('hidden'));
-                showToast("Mod Murid - Hanya paparan rekod sahaja", "warning");
+                showToast("Mod Murid sahaja", "warning");
             }
             loadAttendanceMatrix();
             renderDailyPlannerGrid();
@@ -1110,25 +1134,10 @@
                 activeTabBtn.classList.remove('text-slate-400');
             }
 
-            document.querySelectorAll('[id^="mtab-"]').forEach(el => {
-                el.classList.remove('bg-emerald-600', 'text-white');
-                el.classList.add('bg-slate-800', 'text-slate-300');
-            });
-            const activeMTabBtn = document.getElementById(`mtab-${tabId}`);
-            if(activeMTabBtn) {
-                activeMTabBtn.classList.add('bg-emerald-600', 'text-white');
-                activeMTabBtn.classList.remove('bg-slate-800', 'text-slate-300');
-            }
-
-            if (tabId === 'analytics') {
-                updateCharts();
-            } else if (tabId === 'dashboard') {
-                updateDashboard();
-            } else if (tabId === 'students') {
-                renderStudentCards();
-            } else if (tabId === 'sessions') {
-                renderDailyPlannerGrid();
-            }
+            if (tabId === 'analytics') updateCharts();
+            else if (tabId === 'dashboard') updateDashboard();
+            else if (tabId === 'students') renderStudentCards();
+            else if (tabId === 'sessions') renderDailyPlannerGrid();
         }
 
         function calculateStudentStats(studentId) {
@@ -1161,12 +1170,12 @@
         }
 
         function getBeltInfo(cops) {
-            if (cops >= 50) return { title: "BIO-DOJO LEGEND", color: "bg-amber-500 text-slate-950 border-amber-300", icon: "🏆", bgClass: "bg-amber-500/20 text-amber-400 border-amber-500/40" };
-            if (cops >= 40) return { title: "ELITE", color: "bg-slate-900 text-amber-400 border-slate-700", icon: "⬛", bgClass: "bg-slate-800 text-slate-200 border-slate-600" };
-            if (cops >= 30) return { title: "MASTER", color: "bg-amber-900 text-amber-100 border-amber-800", icon: "🟤", bgClass: "bg-amber-900/30 text-amber-300 border-amber-800" };
-            if (cops >= 20) return { title: "ACHIEVER", color: "bg-blue-600 text-white border-blue-400", icon: "🔵", bgClass: "bg-blue-500/20 text-blue-400 border-blue-500/30" };
-            if (cops >= 10) return { title: "EXPLORER", color: "bg-emerald-600 text-white border-emerald-400", icon: "🟢", bgClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" };
-            return { title: "STARTER", color: "bg-slate-300 text-slate-900 border-slate-400", icon: "⚪", bgClass: "bg-slate-800 text-slate-400 border-slate-700" };
+            if (cops >= 50) return { title: "BIO-DOJO LEGEND", icon: "🏆", bgClass: "bg-amber-500/20 text-amber-400 border-amber-500/40" };
+            if (cops >= 40) return { title: "ELITE", icon: "⬛", bgClass: "bg-slate-800 text-slate-200 border-slate-600" };
+            if (cops >= 30) return { title: "MASTER", icon: "🟤", bgClass: "bg-amber-900/30 text-amber-300 border-amber-800" };
+            if (cops >= 20) return { title: "ACHIEVER", icon: "🔵", bgClass: "bg-blue-500/20 text-blue-400 border-blue-500/30" };
+            if (cops >= 10) return { title: "EXPLORER", icon: "🟢", bgClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" };
+            return { title: "STARTER", icon: "⚪", bgClass: "bg-slate-800 text-slate-400 border-slate-700" };
         }
 
         function updateDashboard() {
@@ -1185,8 +1194,7 @@
 
             const avgMins = Math.round(totalMinutesSum / (students.length || 1));
             document.getElementById('avg-minutes-text').innerText = `${avgMins} / 100 Min Purata`;
-            const barPct = Math.min(100, Math.round((avgMins / 100) * 100));
-            document.getElementById('avg-minutes-bar').style.width = barPct + '%';
+            document.getElementById('avg-minutes-bar').style.width = Math.min(100, Math.round((avgMins / 100) * 100)) + '%';
 
             if (studentRankings.length > 0) setPodiumData('podium-1', studentRankings[0]);
             if (studentRankings.length > 1) setPodiumData('podium-2', studentRankings[1]);
@@ -1255,9 +1263,7 @@
             }
 
             const searchKey = document.getElementById('search-leaderboard')?.value.toLowerCase() || '';
-            if (searchKey) {
-                list = list.filter(s => s.name.toLowerCase().includes(searchKey));
-            }
+            if (searchKey) list = list.filter(s => s.name.toLowerCase().includes(searchKey));
 
             const tbody = document.getElementById('leaderboard-table-body');
             tbody.innerHTML = list.map((std, idx) => `
@@ -1297,13 +1303,19 @@
 
         function populateAttendanceSessionDropdown() {
             const select = document.getElementById('select-attendance-session');
+            const currentVal = select.value;
             select.innerHTML = sessions.map(s => `
                 <option value="${s.id}">${s.title} — ${s.bab} (${s.date || 'Belum Ditetapkan'})</option>
             `).join('');
+
+            if (currentVal && sessions.some(s => s.id === currentVal)) {
+                select.value = currentVal;
+            }
         }
 
         function loadAttendanceMatrix() {
-            const sessionId = document.getElementById('select-attendance-session').value;
+            const select = document.getElementById('select-attendance-session');
+            const sessionId = select.value || sessions[0]?.id;
             const currentSession = sessions.find(s => s.id === sessionId);
 
             if (currentSession) {
@@ -1363,7 +1375,7 @@
             }
             attendanceRecords[sessionId][studentId].status = status;
 
-            saveData();
+            saveDataToCloud();
             loadAttendanceMatrix();
             updateDashboard();
         }
@@ -1377,7 +1389,7 @@
             }
             attendanceRecords[sessionId][studentId][badgeKey] = !attendanceRecords[sessionId][studentId][badgeKey];
 
-            saveData();
+            saveDataToCloud();
             loadAttendanceMatrix();
             updateDashboard();
         }
@@ -1388,7 +1400,7 @@
             const idx = sessions.findIndex(s => s.id === sessionId);
             if (idx !== -1) {
                 sessions[idx].date = selectedDate;
-                saveData();
+                saveDataToCloud();
                 populateAttendanceSessionDropdown();
                 renderDailyPlannerGrid();
                 renderSessionList();
@@ -1411,7 +1423,7 @@
                 attendanceRecords[sessionId][std.id] = { ...current, status: '✓' };
             });
 
-            saveData();
+            saveDataToCloud();
             loadAttendanceMatrix();
             updateDashboard();
             showToast("Semua murid ditandakan HADIR (✓)");
@@ -1426,7 +1438,7 @@
                 attendanceRecords[sessionId][std.id] = { ...current, status: 'A' };
             });
 
-            saveData();
+            saveDataToCloud();
             loadAttendanceMatrix();
             updateDashboard();
             showToast("Semua murid ditandakan PONTENG (A)", "warning");
@@ -1437,24 +1449,24 @@
             const sessionId = document.getElementById('select-attendance-session').value;
             delete attendanceRecords[sessionId];
 
-            saveData();
+            saveDataToCloud();
             loadAttendanceMatrix();
             updateDashboard();
             showToast("Rekod kehadiran sesi ini telah direset");
         }
 
         function saveAttendanceData() {
-            saveData();
-            showToast("Rekod kehadiran berjaya disimpan secara tempatan!");
+            saveDataToCloud();
+            showToast("Rekod kehadiran berjaya disimpan ke Cloud & Peranti Murid!");
         }
 
         function quickAddCop(studentId, delta) {
             if (!isAdmin) return;
             manualCops[studentId] = (manualCops[studentId] || 0) + delta;
-            saveData();
+            saveDataToCloud();
             updateDashboard();
             loadAttendanceMatrix();
-            showToast(`Cop manual berjaya dikemaskini (${delta > 0 ? '+' : ''}${delta})`);
+            showToast(`Cop manual dikemaskini (${delta > 0 ? '+' : ''}${delta})`);
         }
 
         function renderDailyPlannerGrid() {
@@ -1471,12 +1483,7 @@
             document.getElementById('planner-total-count').innerText = `${filteredSessions.length} Hari Paparan`;
 
             if (filteredSessions.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full py-12 text-center text-slate-500 text-xs">
-                        <i class="fa-solid fa-folder-open text-3xl mb-2 block"></i>
-                        Tiada bab dijumpai mengikut tapisan.
-                    </div>
-                `;
+                container.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 text-xs">Tiada bab dijumpai.</div>`;
                 return;
             }
 
@@ -1496,15 +1503,11 @@
                             <i class="fa-solid fa-book-bookmark text-emerald-400 text-xs mr-1"></i> ${s.bab}
                         </h4>
 
-                        ${s.notes ? `<p class="text-[11px] text-slate-400 mt-2 bg-slate-900 p-2 rounded-lg border border-slate-800 italic"><i class="fa-solid fa-note-sticky text-amber-400 mr-1"></i>${s.notes}</p>` : ''}
+                        ${s.notes ? `<p class="text-[11px] text-slate-400 mt-2 bg-slate-900 p-2 rounded-lg border border-slate-800 italic">${s.notes}</p>` : ''}
 
                         <div class="mt-3 flex flex-wrap gap-1.5 text-[10px]">
-                            <span class="bg-slate-900 text-slate-300 px-2 py-0.5 rounded-md border border-slate-800">
-                                🎴 ${s.flashcard}
-                            </span>
-                            <span class="bg-slate-900 text-amber-300 px-2 py-0.5 rounded-md border border-slate-800 font-medium">
-                                ⚡ ${s.activity}
-                            </span>
+                            <span class="bg-slate-900 text-slate-300 px-2 py-0.5 rounded-md border border-slate-800">🎴 ${s.flashcard}</span>
+                            <span class="bg-slate-900 text-amber-300 px-2 py-0.5 rounded-md border border-slate-800 font-medium">⚡ ${s.activity}</span>
                         </div>
                     </div>
 
@@ -1595,14 +1598,14 @@
                 sessions[idx].activity = activity;
                 sessions[idx].notes = notes;
 
-                saveData();
+                saveDataToCloud();
                 renderDailyPlannerGrid();
                 renderSessionList();
                 populateAttendanceSessionDropdown();
                 loadAttendanceMatrix();
                 updateDashboard();
                 closeModal('modal-quick-chapter');
-                showToast("Bab harian berjaya dikemaskini!");
+                showToast("Bab harian berjaya dikemaskini di Cloud!");
             }
         }
 
@@ -1619,22 +1622,20 @@
 
             if (id) {
                 const idx = sessions.findIndex(s => s.id === id);
-                if (idx !== -1) {
-                    sessions[idx] = { id, title, date, form, bab, flashcard, activity, notes };
-                }
+                if (idx !== -1) sessions[idx] = { id, title, date, form, bab, flashcard, activity, notes };
             } else {
                 const newId = 's_' + Date.now();
                 sessions.push({ id: newId, title, date, form, bab, flashcard, activity, notes });
             }
 
-            saveData();
+            saveDataToCloud();
             resetSessionForm();
             renderDailyPlannerGrid();
             renderSessionList();
             populateAttendanceSessionDropdown();
             loadAttendanceMatrix();
             updateDashboard();
-            showToast("Jadual bab berjaya disimpan!");
+            showToast("Jadual bab disimpan ke Cloud!");
         }
 
         function editSessionForm(sessionId) {
@@ -1678,7 +1679,7 @@
                 notes: ""
             });
 
-            saveData();
+            saveDataToCloud();
             renderDailyPlannerGrid();
             renderSessionList();
             populateAttendanceSessionDropdown();
@@ -1691,13 +1692,13 @@
                 "Adakah anda ingin menjana semula jadual bab secara automatik mengikut susunan sukatan Tingkatan 4 dan Tingkatan 5?",
                 function() {
                     sessions = [...DEFAULT_SESSIONS];
-                    saveData();
+                    saveDataToCloud();
                     renderDailyPlannerGrid();
                     renderSessionList();
                     populateAttendanceSessionDropdown();
                     loadAttendanceMatrix();
                     updateDashboard();
-                    showToast("Jadual bab harian berjaya disusun secara automatik!");
+                    showToast("Jadual bab harian direset!");
                 }
             );
         }
@@ -1765,29 +1766,28 @@
             document.getElementById('btn-passport-minus').onclick = () => quickAddCop(studentId, -1);
             document.getElementById('btn-passport-plus').onclick = () => quickAddCop(studentId, 1);
 
-            // Badges
-            const badgesDiv = document.getElementById('passport-modal-badges');
-            badgesDiv.innerHTML = `
+            document.getElementById('passport-modal-badges').innerHTML = `
                 <span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-lg">⭐ Perfect Recall: ${stats.badges.perfectRecall}</span>
                 <span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-lg">👑 Champion: ${stats.badges.champion}</span>
                 <span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-lg">🧠 Terangkan Konsep: ${stats.badges.explainConcept}</span>
             `;
 
-            // Attendance Log
             const historyDiv = document.getElementById('passport-modal-history');
-            const logs = sessions.map(s => {
+            historyDiv.innerHTML = sessions.map(s => {
                 const rec = attendanceRecords[s.id]?.[studentId];
                 const status = rec ? rec.status : 'A';
-                const statusColor = status === '✓' ? 'text-emerald-400' : status === 'P' ? 'text-amber-400' : 'text-rose-400';
+                const statusBadge = status === '✓' ? '<span class="text-emerald-400 font-bold">Hadir (+1 Cop)</span>' : status === 'P' ? '<span class="text-amber-400 font-bold">Tak Lengkap</span>' : '<span class="text-rose-400">Tidak Hadir</span>';
+
                 return `
-                    <div class="flex justify-between items-center bg-slate-950 p-2 rounded-lg border border-slate-800">
-                        <span><strong>${s.title}</strong> (${s.date || '---'}): ${s.bab}</span>
-                        <span class="font-bold ${statusColor}">${status === '✓' ? '✓ Hadir (+1)' : status === 'P' ? 'P Tak Lengkap' : 'A Ponteng'}</span>
+                    <div class="flex justify-between items-center p-2 rounded-lg bg-slate-950 border border-slate-800">
+                        <div>
+                            <span class="font-bold text-white">${s.title}</span>
+                            <span class="text-slate-400 text-[10px] ml-1">(${s.bab})</span>
+                        </div>
+                        <div>${statusBadge}</div>
                     </div>
                 `;
-            });
-
-            historyDiv.innerHTML = logs.length ? logs.join('') : `<p class="text-slate-500">Tiada rekod kehadiran.</p>`;
+            }).join('');
 
             document.getElementById('modal-passport').classList.remove('hidden');
         }
@@ -1798,18 +1798,15 @@
         }
 
         function handleAddStudent() {
-            const name = document.getElementById('new-student-name-input').value.trim();
-            if (!name) return;
+            const nameInput = document.getElementById('new-student-name-input').value.trim();
+            if (!nameInput) return;
 
-            const newStudent = {
-                id: 'std_' + Date.now(),
-                name: name.toUpperCase()
-            };
+            const newId = 'std_' + Date.now();
+            students.push({ id: newId, name: nameInput.toUpperCase() });
 
-            students.push(newStudent);
-            saveData();
-            refreshAllUI();
+            saveDataToCloud();
             closeModal('modal-add-student');
+            refreshAllUI();
             showToast("Murid baru berjaya ditambah!");
         }
 
@@ -1826,15 +1823,15 @@
             const id = document.getElementById('edit-student-id-input').value;
             const newName = document.getElementById('edit-student-name-input').value.trim();
 
-            if (!newName) return;
-
-            const idx = students.findIndex(s => s.id === id);
-            if (idx !== -1) {
-                students[idx].name = newName.toUpperCase();
-                saveData();
-                refreshAllUI();
-                closeModal('modal-edit-student');
-                showToast("Nama murid berjaya dikemaskini!");
+            if (id && newName) {
+                const idx = students.findIndex(s => s.id === id);
+                if (idx !== -1) {
+                    students[idx].name = newName.toUpperCase();
+                    saveDataToCloud();
+                    closeModal('modal-edit-student');
+                    refreshAllUI();
+                    showToast("Nama murid telah dikemaskini!");
+                }
             }
         }
 
@@ -1844,167 +1841,107 @@
 
             showConfirmModal(
                 "Padam Murid",
-                `Adakah anda pasti untuk memadam rekod murid "${std.name}"?`,
+                `Adakah anda pasti untuk memadam ${std.name} dari senarai?`,
                 function() {
                     students = students.filter(s => s.id !== studentId);
-                    saveData();
+                    saveDataToCloud();
                     refreshAllUI();
-                    showToast("Murid berjaya dipadam");
+                    showToast("Murid telah dipadam", "warning");
                 }
             );
-        }
-
-        function updateCharts() {
-            const studentStatsList = students.map(s => ({ name: s.name, ...calculateStudentStats(s.id) }));
-
-            // Coverage calculation
-            const coveredF4 = new Set(sessions.filter(s => s.form === '4').map(s => s.bab)).size;
-            const coveredF5 = new Set(sessions.filter(s => s.form === '5').map(s => s.bab)).size;
-
-            document.getElementById('coverage-f4-text').innerText = `${coveredF4} / 15 Bab (${Math.round((coveredF4 / 15) * 100)}%)`;
-            document.getElementById('coverage-f5-text').innerText = `${coveredF5} / 13 Bab (${Math.round((coveredF5 / 13) * 100)}%)`;
-
-            // Chart 1: Minutes per student
-            const ctx1 = document.getElementById('chart-minutes-per-student').getContext('2d');
-            if (minutesChart) minutesChart.destroy();
-
-            minutesChart = new Chart(ctx1, {
-                type: 'bar',
-                data: {
-                    labels: studentStatsList.map(s => s.name.split(' ')[0]),
-                    datasets: [{
-                        label: 'Minit Pembelajaran',
-                        data: studentStatsList.map(s => s.totalMinutes),
-                        backgroundColor: '#10b981',
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
-                        x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
-                    }
-                }
-            });
-
-            // Chart 2: Belt distribution
-            const beltCounts = { STARTER: 0, EXPLORER: 0, ACHIEVER: 0, MASTER: 0, ELITE: 0, LEGEND: 0 };
-            studentStatsList.forEach(s => {
-                if (s.belt.title.includes('LEGEND')) beltCounts.LEGEND++;
-                else beltCounts[s.belt.title]++;
-            });
-
-            const ctx2 = document.getElementById('chart-belt-distribution').getContext('2d');
-            if (beltChart) beltChart.destroy();
-
-            beltChart = new Chart(ctx2, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Starter', 'Explorer', 'Achiever', 'Master', 'Elite', 'Legend'],
-                    datasets: [{
-                        data: Object.values(beltCounts),
-                        backgroundColor: ['#94a3b8', '#22c55e', '#3b82f6', '#8b5cf6', '#334155', '#f59e0b']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#94a3b8' } } }
-                }
-            });
-
-            // Chart 3: Attendance Trend over sessions
-            const sessionLabels = sessions.map(s => s.title);
-            const attendanceCounts = sessions.map(s => {
-                const recs = attendanceRecords[s.id] || {};
-                return Object.values(recs).filter(r => r.status === '✓').length;
-            });
-
-            const ctx3 = document.getElementById('chart-session-trend').getContext('2d');
-            if (trendChart) trendChart.destroy();
-
-            trendChart = new Chart(ctx3, {
-                type: 'line',
-                data: {
-                    labels: sessionLabels,
-                    datasets: [{
-                        label: 'Bilangan Murid Hadir (✓)',
-                        data: attendanceCounts,
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#94a3b8' } } },
-                    scales: {
-                        y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
-                        x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
-                    }
-                }
-            });
-        }
-
-        function exportToCSV() {
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Bil,Nama Murid,Jumlah Cop,Jumlah Minit,Tahap Belt,Peratus Kehadiran\n";
-
-            students.forEach((std, idx) => {
-                const stats = calculateStudentStats(std.id);
-                csvContent += `${idx + 1},"${std.name}",${stats.totalCops},${stats.totalMinutes},"${stats.belt.title}",${stats.attendancePct}%\n`;
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Laporan_BioDojo_Kehadiran_${getFormattedDate()}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast("Laporan CSV Kehadiran berjaya dimuat turun!");
-        }
-
-        function triggerConfetti() {
-            if (typeof confetti === 'function') {
-                confetti({
-                    particleCount: 120,
-                    spread: 80,
-                    origin: { y: 0.6 }
-                });
-            }
-            showToast("Tahniah atas pencapaian cemerlang Bio-Dojo!");
         }
 
         function resetDataConfirmation() {
             showConfirmModal(
                 "Reset Semua Data",
-                "Adakah anda pasti untuk menetapkan semula semua data kehadiran murid dan jadual sesi?",
+                "Adakah anda pasti untuk menetapkan semula semua data kehadiran murid?",
                 function() {
-                    localStorage.clear();
-                    students = DEFAULT_STUDENTS.map((name, index) => ({
-                        id: 'std_' + (index + 1),
-                        name: name
-                    }));
-                    sessions = [...DEFAULT_SESSIONS];
                     attendanceRecords = {};
                     manualCops = {};
-                    saveData();
+                    saveDataToCloud();
                     refreshAllUI();
-                    showToast("Semua data telah direset ke tetapan asal");
+                    showToast("Semua rekod kehadiran berjaya direset!", "warning");
                 }
             );
         }
 
-        // Window Load Initialization
-        window.onload = function() {
-            initApp();
-        };
+        function triggerConfetti() {
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        }
+
+        function exportToCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,Bil,Nama Murid,Jumlah Cop,Jumlah Minit,Kehadiran (%)\n";
+            students.forEach((s, idx) => {
+                const stats = calculateStudentStats(s.id);
+                csvContent += `${idx + 1},"${s.name}",${stats.totalCops},${stats.totalMinutes},${stats.attendancePct}%\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Laporan_BioDojo_${getFormattedDate()}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function updateCharts() {
+            const studentStats = students.map(s => ({ name: s.name.split(' ')[0], ...calculateStudentStats(s.id) }));
+
+            // Chart 1: Minutes per Student
+            const ctx1 = document.getElementById('chart-minutes-per-student')?.getContext('2d');
+            if (ctx1) {
+                if (minutesChart) minutesChart.destroy();
+                minutesChart = new Chart(ctx1, {
+                    type: 'bar',
+                    data: {
+                        labels: studentStats.map(s => s.name),
+                        datasets: [{
+                            label: 'Minit Belajar',
+                            data: studentStats.map(s => s.totalMinutes),
+                            backgroundColor: '#10b981',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+                            x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                        }
+                    }
+                });
+            }
+
+            // Chart 2: Belt Ranks Distribution
+            const ctx2 = document.getElementById('chart-belt-distribution')?.getContext('2d');
+            if (ctx2) {
+                if (beltChart) beltChart.destroy();
+                const beltCounts = { 'STARTER': 0, 'EXPLORER': 0, 'ACHIEVER': 0, 'MASTER': 0, 'ELITE': 0, 'LEGEND': 0 };
+                studentStats.forEach(s => {
+                    const title = s.belt.title.replace('BIO-DOJO ', '');
+                    if (beltCounts[title] !== undefined) beltCounts[title]++;
+                });
+
+                beltChart = new Chart(ctx2, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(beltCounts),
+                        datasets: [{
+                            data: Object.values(beltCounts),
+                            backgroundColor: ['#94a3b8', '#10b981', '#3b82f6', '#8b5cf6', '#334155', '#f59e0b']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { labels: { color: '#e2e8f0' } } }
+                    }
+                });
+            }
+        }
     </script>
 </body>
 </html>
