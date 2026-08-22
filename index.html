@@ -1120,23 +1120,40 @@
             document.getElementById(modalId).classList.add('hidden');
         }
 
-        function toggleAdminMode() {
-            isAdmin = !isAdmin;
-            const btnText = document.getElementById('admin-mode-text');
-            const adminEls = document.querySelectorAll('.admin-only');
+function toggleAdminMode() {
+    if (!isAdmin) {
+        // Jika sedang berada dalam mod murid dan ingin masuk ke mod admin
+        const passwordInput = prompt("Sila masukkan kata laluan admin:");
+        
+        // TETAPKAN KATA LALUAN ANDA DI SINI
+        const ADMIN_PASSWORD = "biodojo2026"; 
 
-            if (isAdmin) {
-                if (btnText) btnText.innerText = "Mod Admin";
-                adminEls.forEach(el => el.classList.remove('hidden'));
-                showToast("Mod Admin diaktifkan", "info");
-            } else {
-                if (btnText) btnText.innerText = "Mod Murid (Paparan)";
-                adminEls.forEach(el => el.classList.add('hidden'));
-                showToast("Mod Murid sahaja", "warning");
-            }
-            loadAttendanceMatrix();
-            renderDailyPlannerGrid();
+        if (passwordInput === null) {
+            return; // Pengguna menekan butang Batal (Cancel)
         }
+
+        if (passwordInput !== ADMIN_PASSWORD) {
+            showToast("Kata laluan admin tidak sah!", "error");
+            return;
+        }
+
+        isAdmin = true;
+        showToast("Mod Admin Diaktifkan dengan Jayanya!");
+    } else {
+        // Jika sedang dalam mod admin dan ingin keluar ke mod murid
+        isAdmin = false;
+        showToast("Mod Murid Diaktifkan.");
+    }
+
+    // Kemaskini paparan antara muka
+    document.getElementById('admin-mode-text').innerText = isAdmin ? "Mod Admin" : "Mod Murid";
+    document.querySelectorAll('.admin-only').forEach(el => el.classList.toggle('hidden', !isAdmin));
+    
+    // Segarkan paparan kad murid jika perlu
+    if (typeof renderStudentCards === 'function') {
+        renderStudentCards();
+    }
+}
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
