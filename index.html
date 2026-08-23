@@ -143,24 +143,22 @@
                     </button>
                 </nav>
 
-<!-- Quick Actions & Mode Switch (Responsive) -->
-<div class="flex flex-row items-center space-x-1 sm:space-x-2 shrink-0">
-    <button id="admin-mode-btn" onclick="toggleAdminMode()" title="Tukar Mod Admin / Murid" class="px-2.5 py-2 bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 rounded-xl transition flex items-center space-x-1.5 text-xs font-bold">
-        <i class="fa-solid fa-user-shield text-xs sm:text-sm"></i>
-        <span id="admin-mode-text" class="hidden sm:inline">Mod Murid</span>
-    </button>
-    <button onclick="exportToCSV()" title="Eksport Laporan Kehadiran (CSV)" class="p-2.5 bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border border-blue-500/40 rounded-xl transition flex items-center justify-center">
-        <i class="fa-solid fa-file-csv text-sm sm:text-base"></i>
-        <span class="hidden lg:inline ml-1">Eksport CSV</span>
-    </button>
-    <button onclick="triggerConfetti()" title="Meraikan Pencapaian" class="p-2.5 bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 border border-amber-500/40 rounded-xl transition flex items-center justify-center">
-        <i class="fa-solid fa-wand-magic-sparkles text-xs sm:text-sm"></i>
-    </button>
-    <button onclick="resetDataConfirmation()" title="Reset Data Pelajar" class="admin-only p-2.5 bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 border border-rose-500/40 rounded-xl transition hidden flex items-center justify-center">
-        <i class="fa-solid fa-rotate-right text-xs sm:text-sm"></i>
-    </button>
-</div>
-
+<!-- Quick Actions & Mode Switch -->
+            <div class="flex flex-row items-center space-x-1.5 shrink-0">
+                <button id="admin-mode-btn" onclick="toggleAdminMode()" title="Tukar Mod Admin / Murid" class="px-2 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 rounded-lg transition flex items-center space-x-1 text-[11px] font-bold">
+                    <i class="fa-solid fa-user-shield text-xs"></i>
+                    <span id="admin-mode-text" class="hidden sm:inline">Mod Murid</span>
+                </button>
+                <button onclick="exportToCSV()" title="Eksport Laporan Kehadiran (CSV)" class="p-2 bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border border-blue-500/40 rounded-lg transition flex items-center justify-center">
+                    <i class="fa-solid fa-file-csv text-xs"></i>
+                </button>
+                <button onclick="triggerConfetti()" title="Meraikan Pencapaian" class="p-2 bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 border border-amber-500/40 rounded-lg transition flex items-center justify-center">
+                    <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                </button>
+                <button onclick="resetDataConfirmation()" title="Reset Data Pelajar" class="admin-only p-2 bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 border border-rose-500/40 rounded-lg transition hidden flex items-center justify-center">
+                    <i class="fa-solid fa-rotate-right text-xs"></i>
+                </button>
+            </div>
             <!-- Mobile Navigation Bar -->
             <div class="md:hidden flex overflow-x-auto py-2 space-x-2 border-t border-slate-800 text-xs no-scrollbar">
                 <button onclick="switchTab('dashboard')" id="mtab-dashboard" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-emerald-600 text-white font-medium">Podium & Utama</button>
