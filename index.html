@@ -159,15 +159,6 @@
                     <i class="fa-solid fa-rotate-right text-xs"></i>
                 </button>
             </div>
-            <!-- Mobile Navigation Bar -->
-            <div class="md:hidden flex overflow-x-auto py-2 space-x-2 border-t border-slate-800 text-xs no-scrollbar">
-                <button onclick="switchTab('dashboard')" id="mtab-dashboard" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-emerald-600 text-white font-medium">Podium & Utama</button>
-                <button onclick="switchTab('attendance')" id="mtab-attendance" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300">Rekod Kehadiran</button>
-                <button onclick="switchTab('sessions')" id="mtab-sessions" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300">Jadual Bab Harian</button>
-                <button onclick="switchTab('analytics')" id="mtab-analytics" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300">Graf Pencapaian</button>
-                <button onclick="switchTab('students')" id="mtab-students" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300">Senarai Murid</button>
-            </div>
-        </div>
     </header>
 
     <!-- Main Content Container -->
@@ -1964,5 +1955,28 @@ function toggleAdminMode() {
             }
         }
     </script>
+<!-- Mobile Bottom Navigation Bar (Terapung & Mudah Dislide) -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur-md border-t border-slate-800 px-3 py-2 flex overflow-x-auto space-x-2 no-scrollbar shadow-lg">
+    <button onclick="switchTab('dashboard')" id="mtab-dashboard" class="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-emerald-600 text-white shadow-md">
+        <i class="fa-solid fa-trophy"></i>
+        <span>Pentas & Utama</span>
+    </button>
+    <button onclick="switchTab('attendance')" id="mtab-attendance" class="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-900 text-slate-300 border border-slate-800">
+        <i class="fa-solid fa-calendar-check"></i>
+        <span>Rekod Kehadiran</span>
+    </button>
+    <button onclick="switchTab('sessions')" id="mtab-sessions" class="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-900 text-slate-300 border border-slate-800">
+        <i class="fa-solid fa-book-open"></i>
+        <span>Jadual Bab Harian</span>
+    </button>
+    <button onclick="switchTab('analytics')" id="mtab-analytics" class="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-900 text-slate-300 border border-slate-800">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Graf Pencapaian</span>
+    </button>
+    <button onclick="switchTab('students')" id="mtab-students" class="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-900 text-slate-300 border border-slate-800">
+        <i class="fa-solid fa-users"></i>
+        <span>Senarai Murid</span>
+    </button>
+</div>
 </body>
 </html>
